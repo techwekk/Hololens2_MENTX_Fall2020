@@ -1,6 +1,7 @@
 ﻿using Microsoft.MixedReality.Toolkit.Utilities.Gltf.Schema;
 using Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -32,16 +33,27 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
         // private float ScaleFactor = 1.0f;
 
         private bool foundNewObject = false;
+        private List<GameObject> spawnedObjects;
 
         public void buttonPressToSimulate()
         {
             foundNewObject = true;
         }
 
+        public void deleteObjects()
+        {
+            var allObjects = spawnedObjects.ToArray();
+            for(int i = 0; i < allObjects.Length; i++)
+            {
+                Destroy(allObjects[i]);
+            }
+            spawnedObjects.Clear();
+        }
+
         // Start is called before the first frame update
         void Start()
         {
-
+            spawnedObjects = new List<GameObject>();
         }
 
         // Update is called once per frame
@@ -80,8 +92,10 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
         private void SpawnObject(GameObject prefabToSpawn)
         {
             Vector3 positionToSpawn = Vector3.zero;
+            positionToSpawn.z += 2f;
             Quaternion rotation = Quaternion.identity;
-            Instantiate(prefabToSpawn, positionToSpawn, rotation);
+            var newObj = Instantiate(prefabToSpawn, positionToSpawn, rotation);
+            spawnedObjects.Add(newObj);
         }
 
         /*
