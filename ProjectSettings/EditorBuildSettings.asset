@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/techwekk.unity
     guid: 85fda64b379b71d4a93c9557b89571c5
+  - enabled: 0
+    path: Assets/MRTK/Examples/Demos/SpatialAwareness/Scenes/SpatialAwarenessMeshDemo.unity
+    guid: 9db181581e617224e962601f062da844
   m_configObjects: {}
