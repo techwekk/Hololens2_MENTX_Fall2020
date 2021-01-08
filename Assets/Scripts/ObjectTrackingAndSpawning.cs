@@ -60,7 +60,13 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
         //Task4
         Quaternion rotationObject; // Ausrichtung
 
-        
+        //Starting Suzanne info
+        Transform SuzanneStart;
+
+        //Timer
+        public float timeBetweenTasks = 3f;
+        private float counter = 0;
+        private bool resetValues = true;
 
         // [SerializeField]
         // [Tooltip("Scale factor to apply on load")]
@@ -91,7 +97,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
             spawnedObjects.Clear();
 
             //If all tasks were done, show winning text :)
-            if (tasksFinished == Tasks.Length)
+            if (tasksFinished == Tasks.Length - 1)
                 winningText.SetActive(true);
 
             //reset task counter
@@ -123,11 +129,25 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
             }
             winningText.SetActive(false);
             tasksFinished = 0;
+
+            //Get starting transform from Suzanne
+            SuzanneStart = Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform;
         }
 
         // Update is called once per frame
         void Update()
         {
+            //counter keeps counting up
+            counter += Time.deltaTime;
+            //gets the current transform of the object
+           if (counter >= timeBetweenTasks && spawnedObjects.Count > 0 && resetValues == false)
+            {
+                resetValues = true;
+                positionObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position;
+                rotationObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.rotation;
+                scaleObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.localScale;
+            } 
+
             // scan umgebung
             // TODO
 
@@ -160,12 +180,14 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
 
                             //task counter goes one up
                             tasksFinished++;
+                            counter = 0;
 
-                            //Save position of the Object
+
+                            //Save position of the Object (old)
                             if (spawnMethod == SpawnMethod.Instantiate)
-                                positionObject = spawnedObjects[0].transform.position; //before moving task, check where it is placed
+                                positionObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position; //before moving task, check where it is placed
                             else
-                                positionObject = Suzanne.transform.position;
+                                positionObject = Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position;
                         }
                         break;
                     case ObjectEnum.Cup:
@@ -182,43 +204,47 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
              * Task 2: Grab/Move object
              */
                                         // spawnedObject = real time
-            if (tasksFinished == 1 && /* spawnedObjects[0].transform.position != positionObject */ Suzanne.transform.position != positionObject)
+            if (counter >= timeBetweenTasks && tasksFinished == 1 && spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position != positionObject /* Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position != positionObject*/)
             {
                 //What happens when the object's position has changed
 
                 DisplayNextTask();
 
-                //Save current rotation, in case it changed
+                //Save current rotation, in case it changed (old)
                 if (spawnMethod == SpawnMethod.Instantiate)
-                    rotationObject = spawnedObjects[0].transform.rotation;
+                    rotationObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.rotation;
                 else
-                    rotationObject = Suzanne.transform.rotation;
+                    rotationObject = Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.rotation;
 
                 //Increment task counter
                 tasksFinished++;
+                counter = 0;
+                resetValues = false;
             }
             /*
              * Task 3: Rotate Object
              */
-            else if (tasksFinished == 2 && /* spawnedObjects[0].transform.rotation != rotationObject */ Suzanne.transform.rotation != rotationObject)
+            else if (counter >= timeBetweenTasks && tasksFinished == 2 && spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.rotation != rotationObject /* Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.rotation != rotationObject*/)
             {
                 //What happens when object's position has changed
 
                 DisplayNextTask();
 
-                //Save current localScale
+                //Save current localScale (old)
                 if (spawnMethod == SpawnMethod.Instantiate)
-                    scaleObject = spawnedObjects[0].transform.localScale;
+                    scaleObject = spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.localScale;
                 else
-                    scaleObject = Suzanne.transform.localScale;
+                    scaleObject = Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.localScale;
 
                 //Increment task counter
                 tasksFinished++;
+                counter = 0;
+                resetValues = false;
             }
             /*
              * Task 4: Resize Object
              */
-            else if (tasksFinished == 3 && /*spawnedObjects[0].transform.localScale != scaleObject*/ Suzanne.transform.localScale != scaleObject)
+            else if (counter >= timeBetweenTasks && tasksFinished == 3 && spawnedObjects[0].GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.localScale != scaleObject /* Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.localScale != scaleObject*/)
             {
                 //What happens when object's scale has changed
 
@@ -231,10 +257,12 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
            
 
             //Debug
+            /*
             if(spawnMethod == SpawnMethod.Instantiate)
                 debugText.text = "Meshpos: " + spawnedObjects[0].transform.position + " | Saved position: " + positionObject + Time.time;
             else
                 debugText.text = "Meshpos: " + Suzanne.GetComponent<Microsoft.MixedReality.Toolkit.UI.BoundingBox>().Target.transform.position + " | Saved position: " + positionObject + Time.time;
+            */
         }
 
         private void DisplayNextTask()
@@ -249,10 +277,6 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
                 Tasks[tasksFinished].GetComponent<TextMeshPro>().color = Color.green;   //Color task green
                 Tasks[tasksFinished + 1].SetActive(true);                               //Show next task
             }
-
-
-           
-
         }
 
         private void SpawnObject(GameObject prefabToSpawn)
