@@ -64,7 +64,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
         Transform SuzanneStart;
 
         //Timer
-        public float timeBetweenTasks = 3f;
+        public float timeBetweenTasks = 5f;
         private float counter = 0;
         private bool resetValues = true;
 
