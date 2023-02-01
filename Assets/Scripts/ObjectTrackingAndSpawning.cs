@@ -49,10 +49,10 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
         public enum SpawnMethod { Instantiate, SetActive};
         public SpawnMethod spawnMethod;
 
-        public GameObject Suzanne;
+        public GameObject Suzanne; // new object
 
         //Tasks2
-        Vector3 positionObject;
+        Vector3 positionObject; 
 
         //Task3
         Vector3 scaleObject;
@@ -155,7 +155,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
             // TODO
             // foundNewObject = true;
 
-            // Sobald Objekt erkannt wird, soll virtuelles Objekt geladen und platziert werden
+            // Sobald Objekt erkannt wird, soll virtuelles Objekt geladen und platziert werdenä
             if (foundNewObject || UnityEngine.Input.GetButtonDown("debug"))
             {
                 foundNewObject = false; // entering loop just wants, no duplication
@@ -169,7 +169,7 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos.Gltf
                     case ObjectEnum.Block:
                         // SpawnNewObject(blockRelativePath);
                         if (spawnMethod == SpawnMethod.Instantiate)
-                            SpawnObject(Block);
+                            SpawnObject(Block); // 
                         else
                             Suzanne.SetActive(true);
                         //When spawning new Block, disable task 1 and enable task 2. (Only when task 1 hasn't been done yet)
